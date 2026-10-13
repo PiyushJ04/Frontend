@@ -1,23 +1,27 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import { useAuth } from "./context/AuthContext.jsx";
-import LandingPage from "./pages/LandingPage.jsx";
-import LoginPage from "./pages/LoginPage.jsx";
-import SignupPage from "./pages/SignupPage.jsx";
-import DashboardPage from "./pages/DashboardPage.jsx";
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { useAuth } from './context/AuthContext.jsx';
+import LandingPage from './pages/LandingPage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import SignupPage from './pages/SignupPage.jsx';
+import DashboardPage from './pages/DashboardPage.jsx';
 
-// UX-only guard. The backend still checks the token on every request.
-function ProtectedRoute({ children }) {
+function Protected({ children }) {
   const { token } = useAuth();
   return token ? children : <Navigate to="/login" replace />;
+}
+function GuestOnly({ children }) {
+  const { token } = useAuth();
+  return token ? <Navigate to="/dashboard" replace /> : children;
 }
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
-      <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+      <Route path="/login" element={<GuestOnly><LoginPage /></GuestOnly>} />
+      <Route path="/signup" element={<GuestOnly><SignupPage /></GuestOnly>} />
+      <Route path="/dashboard" element={<Protected><DashboardPage /></Protected>} />
+      <Route path="/dashboard/exams/:examId" element={<Protected><DashboardPage /></Protected>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

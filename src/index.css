@@ -1,0 +1,61 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root { color-scheme: dark; }
+html { scroll-behavior: smooth; }
+body {
+  @apply bg-board-950 text-chalk font-body antialiased;
+}
+::selection { background: #F1D26A; color: #081410; }
+:focus-visible { outline: 2px solid #F1D26A; outline-offset: 3px; border-radius: 6px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* thin chalk scrollbars */
+* { scrollbar-width: thin; scrollbar-color: #244b3f transparent; }
+*::-webkit-scrollbar { width: 8px; height: 8px; }
+*::-webkit-scrollbar-thumb { background: #244b3f; border-radius: 8px; }
+
+@layer components {
+  .dot-grid {
+    background-image: radial-gradient(rgba(236,239,228,.13) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .line-grid {
+    background-image:
+      linear-gradient(to right, rgba(236,239,228,.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(236,239,228,.06) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .paper-ruled {
+    background-image: linear-gradient(to bottom, transparent 31px, rgba(28,43,74,.14) 32px);
+    background-size: 100% 32px;
+  }
+  .hand-ink { font-family: Caveat, cursive; color: #1C2B4A; }
+  .hand-pen { font-family: Caveat, cursive; color: #D8372A; }
+}
+
+/* ---- Micro-interactions ---- */
+button:not(:disabled), a { -webkit-tap-highlight-color: transparent; }
+button:not(:disabled):active { transform: scale(.97); }
+.grain::after { content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .07; mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+@keyframes marquee { to { transform: translateX(-50%); } }
+.marquee-track { display: flex; width: max-content; animation: marquee 32s linear infinite; }
+.marquee:hover .marquee-track { animation-play-state: paused; }
+@keyframes sheen { from { transform: translateX(-120%) skewX(-18deg); } to { transform: translateX(220%) skewX(-18deg); } }
+.sheen { position: relative; overflow: hidden; }
+.sheen::before { content: ''; position: absolute; inset: 0; width: 40%; background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent); transform: translateX(-120%) skewX(-18deg); }
+.sheen:hover::before { animation: sheen .9s ease; }
+.ulink { background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .35s ease, color .2s; }
+.ulink:hover { background-size: 100% 1px; }
+@media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+/* Headline type: a grotesque needs weight and tight tracking where the old serif did not */
+.font-display { font-weight: 600; letter-spacing: -0.035em; }
+.font-hand { letter-spacing: -0.02em; }
+
+/* ---- Loading ---- */
+.skeleton { background: linear-gradient(100deg, #132a22 30%, #1f4337 50%, #132a22 70%); background-size: 200% 100%; animation: skel 1.5s ease-in-out infinite; }
+@keyframes skel { to { background-position: -200% 0; } }
+@media (prefers-reduced-motion: reduce) { .skeleton { animation: none; } }
